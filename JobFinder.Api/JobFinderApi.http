@@ -1,0 +1,6 @@
+@JobFinderApi_HostAddress = http://localhost:5120
+
+GET {{JobFinderApi_HostAddress}}/jobposting/
+Accept: application/json
+
+###
