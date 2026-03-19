@@ -4,6 +4,6 @@ namespace JobFinder.Application.JobPostings
 {
     public interface IJobPostingReader
     {
-        Task<List<JobPosting>> GetAllAsync();
+        Task<IReadOnlyList<JobPosting>> GetAllAsync();
     }
 }

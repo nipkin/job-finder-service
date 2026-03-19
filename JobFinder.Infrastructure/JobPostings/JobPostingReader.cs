@@ -7,10 +7,9 @@ namespace JobFinder.Infrastructure.JobPostings
 {
     public class JobPostingReader(JobFinderDbContext db) : IJobPostingReader
     {
-        public async Task<List<JobPosting>> GetAllAsync()
+        public async Task<IReadOnlyList<JobPosting>> GetAllAsync()
         {
-            var result = await db.JobPostings.ToListAsync();
-            return result;
+            return await db.JobPostings.ToListAsync();
         }
     }
 }

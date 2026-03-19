@@ -2,6 +2,6 @@
 {
     public interface IJobSearchApiClient
     {
-        Task<List<JobSearchResult>> SearchAsync(string query, CancellationToken ct);
+        Task<IReadOnlyList<JobSearchResult>> SearchAsync(string query, CancellationToken ct);
     }
 }

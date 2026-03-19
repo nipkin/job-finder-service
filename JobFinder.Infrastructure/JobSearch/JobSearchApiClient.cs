@@ -5,7 +5,7 @@ namespace JobFinder.Infrastructure.JobSearch
 {
     public class JobSearchApiClient(HttpClient client) : IJobSearchApiClient
     {
-        public async Task<List<JobSearchResult>> SearchAsync(string query, CancellationToken ct)
+        public async Task<IReadOnlyList<JobSearchResult>> SearchAsync(string query, CancellationToken ct)
         {
             var url = $"https://jobsearch.api.jobtechdev.se/search?q={Uri.EscapeDataString(query)}";
 
