@@ -12,10 +12,10 @@ builder.Services.AddDbContext<JobFinderDbContext>(options =>
 
 builder.Services.AddControllers();
 builder.Services.AddApplicationApi();
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructure();
 builder.Services.AddHttpClient<IJobScoringClient, JobScoringClient>(client =>
 {
-    client.BaseAddress = new Uri("http://localhost:11434");
+    client.BaseAddress = new Uri(builder.Configuration["OllamaBaseUrl"]!);
     client.Timeout = TimeSpan.FromSeconds(120);
 });
 

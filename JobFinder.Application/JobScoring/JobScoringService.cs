@@ -56,7 +56,7 @@ namespace JobFinder.Application.JobScoring
             {{ad.Description}}
 
             The job must be evaluated strictly based on the candidate's skills and experience provided.
-            The job must be developer orianted.
+            The job must be developer oriented.
 
             Return JSON exactly in this format:
             {
@@ -68,7 +68,7 @@ namespace JobFinder.Application.JobScoring
             }
         """;
 
-        public static ScoreBreakdown Normalize(ScoreBreakdown s)
+        private static ScoreBreakdown Normalize(ScoreBreakdown s)
         {
             return new ScoreBreakdown
             {

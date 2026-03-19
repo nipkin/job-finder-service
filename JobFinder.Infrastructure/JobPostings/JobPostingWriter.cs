@@ -24,7 +24,7 @@ namespace JobFinder.Infrastructure.JobPostings
 
         public async Task<int> RemoveOutdatedAsync(CancellationToken ct = default)
         {
-            var today = DateTime.Today;
+            var today = DateTime.UtcNow.Date;
             var outdatedPosts = await db.JobPostings
                 .Where(x => x.ApplicationDeadline < today)
                 .ToListAsync(ct);

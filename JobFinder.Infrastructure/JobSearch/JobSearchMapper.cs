@@ -13,11 +13,11 @@ namespace JobFinder.Infrastructure.JobSearch
             ApplicationDeadline = hit.ApplicationDeadline,
             NumberOfVacancies = hit.NumberOfVacancies,
             Relevance = hit.Relevance,
-            Description = hit.Description is null ? null : new Application.JobSearch.JobDescription
+            Description = new Application.JobSearch.JobDescription
             {
                 Text = hit.Description.Text
             },
-            WorkplaceAddress = hit.WorkplaceAddress is null ? null : new Application.JobSearch.WorkplaceAddress
+            WorkplaceAddress = new Application.JobSearch.WorkplaceAddress
             {
                 Region = hit.WorkplaceAddress.Region
             },

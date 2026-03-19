@@ -8,6 +8,7 @@ namespace JobFinder.Application.JobPostings
     {
         public static JobPostingResponse ToResponse(JobPosting jobPosting) => new()
         {
+            Id = jobPosting.Id,
             Headline = jobPosting.Headline,
             Region = jobPosting.Region,
             Description = jobPosting.Description,
@@ -25,6 +26,7 @@ namespace JobFinder.Application.JobPostings
             Description = api.Description != null ? api.Description.Text : string.Empty,
             ApplicationDeadline = api.ApplicationDeadline,
             WebpageUrl = api.WebpageUrl,
+            CreatedAtUtc = DateTime.UtcNow,
             CvScore = cvScore,
         };
     }

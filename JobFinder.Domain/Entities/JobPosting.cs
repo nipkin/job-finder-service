@@ -14,5 +14,6 @@
 
         public const double MinimumScore = 70;
         public bool IsGoodMatch() => CvScore >= MinimumScore;
+
     }
 }

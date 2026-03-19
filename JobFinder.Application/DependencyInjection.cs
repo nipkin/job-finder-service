@@ -11,7 +11,6 @@ namespace JobFinder.Application
         {
             services.AddScoped<IJobPostingImportService, JobPostingImportService>();
             services.AddScoped<IJobScoringService, JobScoringService>();
-            services.AddScoped<IJobSearchService, JobSearchService>();
             return services;
         }
 
