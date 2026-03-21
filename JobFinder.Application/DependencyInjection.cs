@@ -1,6 +1,8 @@
-﻿using JobFinder.Application.JobPostings;
+using JobFinder.Application.Auth;
+using JobFinder.Application.JobPostings;
 using JobFinder.Application.JobScoring;
 using JobFinder.Application.JobSearch;
+using JobFinder.Application.UserProfile;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JobFinder.Application
@@ -11,6 +13,8 @@ namespace JobFinder.Application
         {
             services.AddScoped<IJobPostingImportService, JobPostingImportService>();
             services.AddScoped<IJobScoringService, JobScoringService>();
+            services.AddScoped<IUserProfileService, UserProfileService>();
+            services.AddScoped<IAuthService, AuthService>();
             return services;
         }
 

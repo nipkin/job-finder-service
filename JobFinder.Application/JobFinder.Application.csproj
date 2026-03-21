@@ -15,4 +15,8 @@
     <ProjectReference Include="..\JobFinder.Domain\JobFinder.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UserProfile\" />
+  </ItemGroup>
+
 </Project>

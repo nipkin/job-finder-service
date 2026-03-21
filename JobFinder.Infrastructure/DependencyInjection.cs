@@ -1,9 +1,13 @@
-﻿using JobFinder.Application.JobPostings;
+using JobFinder.Application.Auth;
+using JobFinder.Application.JobPostings;
 using JobFinder.Application.JobScoring;
 using JobFinder.Application.JobSearch;
+using JobFinder.Application.UserProfile;
+using JobFinder.Infrastructure.Auth;
 using JobFinder.Infrastructure.JobPostings;
 using JobFinder.Infrastructure.JobScoring;
 using JobFinder.Infrastructure.JobSearch;
+using JobFinder.Infrastructure.UserProfile;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace JobFinder.Infrastructure
@@ -14,6 +18,8 @@ namespace JobFinder.Infrastructure
         {
             services.AddScoped<IJobPostingWriter, JobPostingWriter>();
             services.AddScoped<IJobPostingReader, JobPostingReader>();
+            services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+            services.AddScoped<IAuthRepository, AuthRepository>();
 
             services.AddHttpClient<IJobSearchApiClient, JobSearchApiClient>();
             services.AddHttpClient<IJobScoringClient, JobScoringClient>();
