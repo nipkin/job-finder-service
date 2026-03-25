@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from './layout/Layout';
 import Start from './pages/Start';
 import Login from './pages/Login';
+import Register from './pages/Register';
 import MyPage from './pages/MyPage';
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
                 <Route element={<Layout />}>
                     <Route path="/" element={<Start />} />
                     <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
                     <Route path="/my-page" element={<MyPage />} />
                 </Route>
             </Routes>

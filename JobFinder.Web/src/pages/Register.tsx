@@ -1,11 +1,17 @@
-import { useLogin } from '../hooks';
+import { useRegister } from '../hooks';
 
-export default function Login() {
-  const { userName, setUserName, password, setPassword, error, handleSubmit } = useLogin();
+export default function Register() {
+  const {
+    userName, setUserName,
+    password, setPassword,
+    confirmPassword, setConfirmPassword,
+    error,
+    handleSubmit,
+  } = useRegister();
 
   return (
     <div>
-      <h1>Login</h1>
+      <h1>Register</h1>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="userName">Username</label>
@@ -27,8 +33,18 @@ export default function Login() {
             required
           />
         </div>
+        <div>
+          <label htmlFor="confirmPassword">Confirm Password</label>
+          <input
+            id="confirmPassword"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+        </div>
         {error && <p>{error}</p>}
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
       </form>
     </div>
   );
