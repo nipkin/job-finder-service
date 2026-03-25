@@ -7,6 +7,30 @@ namespace JobFinder.Api.Services
 {
     public class TokenService(IConfiguration configuration) : ITokenService
     {
+        public ClaimsPrincipal? Validate(string token)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
+
+            try
+            {
+                return new JwtSecurityTokenHandler().ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = key,
+                    ValidateIssuer = true,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = configuration["Jwt:Audience"],
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                }, out _);
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
         public string Generate(Guid userId, string userName)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
