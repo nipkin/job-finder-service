@@ -35,7 +35,7 @@ async function logout(): Promise<void> {
   await fetch(`${BASE_URL}/logout`, { method: 'POST' });
 }
 
-async function register(request: RegisterRequest): Promise<AuthResponse> {
+async function register(request: RegisterRequest): Promise<void> {
   const response = await fetch(`${BASE_URL}/register`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -46,8 +46,11 @@ async function register(request: RegisterRequest): Promise<AuthResponse> {
     const error = await response.json();
     throw new Error(error.message ?? 'Registration failed');
   }
-
-  return response.json();
 }
 
-export const authService = { login, logout, register };
+async function check(): Promise<boolean> {
+  const response = await fetch(`${BASE_URL}/check`);
+  return response.ok;
+}
+
+export const authService = { login, logout, register, check };

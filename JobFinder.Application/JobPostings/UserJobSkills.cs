@@ -1,6 +1,5 @@
 ﻿namespace JobFinder.Application.JobPostings
 {
-    //TODO: Refactor this when implementing dynamic user data
     public class UserJobSkills
     {
         public List<string> CoreSkills { get; set; } = [];

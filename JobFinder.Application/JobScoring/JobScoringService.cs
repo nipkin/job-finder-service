@@ -16,7 +16,7 @@ namespace JobFinder.Application.JobScoring
             var json = await client.GenerateJsonAsync(prompt, ct);
 
             var score = JsonSerializer.Deserialize<ScoreBreakdown>(json);
-            if (score == null) return 0;
+            if (score is null) return 0;
 
             score = Normalize(score);
             return score.Core + score.Frontend + score.Cms + score.Experience + score.Seniority;

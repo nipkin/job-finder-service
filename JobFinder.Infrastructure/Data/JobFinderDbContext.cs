@@ -16,6 +16,14 @@ namespace JobFinder.Infrastructure.Data
          
                 .HasForeignKey(j => j.UserProfileId)
                 .OnDelete(DeleteBehavior.SetNull);
+            modelBuilder.Entity<Domain.Entities.UserProfile>(b =>
+            {
+                b.OwnsMany(u => u.UserSkills, sa =>
+                {
+                    sa.ToTable("UserSkillAreas");
+                    sa.WithOwner().HasForeignKey("UserId");
+                });
+            });
         }
     }
 }

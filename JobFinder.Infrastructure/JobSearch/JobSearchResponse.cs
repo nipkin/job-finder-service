@@ -17,7 +17,7 @@ namespace JobFinder.Infrastructure.JobSearch
         public int ResultTimeInMillis { get; set; }
 
         [JsonPropertyName("hits")]
-        public List<JobSearchApiResult> Hits { get; set; } = new();
+        public List<JobSearchApiResult> Hits { get; set; } = [];
     }
 
     public class Total

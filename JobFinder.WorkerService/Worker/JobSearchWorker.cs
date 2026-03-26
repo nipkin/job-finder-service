@@ -1,4 +1,5 @@
 ﻿using JobFinder.Application.JobPostings;
+using JobFinder.Domain.ValueObjects;
 using JobFinder.WorkerService.Configuration;
 using Microsoft.Extensions.Options;
 
