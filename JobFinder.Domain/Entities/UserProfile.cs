@@ -1,6 +1,4 @@
-﻿using JobFinder.Domain.ValueObjects;
-
-namespace JobFinder.Domain.Entities
+﻿namespace JobFinder.Domain.Entities
 {
     public class UserProfile
     {
