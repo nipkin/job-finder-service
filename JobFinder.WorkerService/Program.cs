@@ -17,7 +17,8 @@ builder.Services.Configure<JobSkills>(
 );
 
 builder.Services.AddDbContext<JobFinderDbContext>(options =>
-              options.UseSqlServer(builder.Configuration.GetConnectionString("Default"), b => b.MigrationsAssembly("JobFinder.WorkerService")));
+              options.UseSqlServer(builder.Configuration.GetConnectionString("Default"), 
+              b => b.MigrationsAssembly("JobFinder.WorkerService")));
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();

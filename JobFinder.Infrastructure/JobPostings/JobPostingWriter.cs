@@ -28,13 +28,21 @@ namespace JobFinder.Infrastructure.JobPostings
             var outdatedPosts = await db.JobPostings
                 .Where(x => x.ApplicationDeadline < today)
                 .ToListAsync(ct);
-
-            foreach (var post in outdatedPosts)
-            {
-                Remove(post);
-            }
+            db.JobPostings.RemoveRange(outdatedPosts);
 
             return outdatedPosts.Count;
+        }
+
+        public async Task<HashSet<string>> GetExistingUrlsAsync(IEnumerable<string> urls, CancellationToken ct)
+        {
+            var urlList = urls.ToList();
+
+            var existing = await db.JobPostings
+                .Where(j => urlList.Contains(j.WebpageUrl))
+                .Select(j => j.WebpageUrl)
+                .ToListAsync(ct);
+
+            return existing.ToHashSet();
         }
 
         public async Task<bool> JobPostExists(string postingUrl, CancellationToken ct = default)

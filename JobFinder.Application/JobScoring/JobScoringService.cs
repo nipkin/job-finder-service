@@ -31,11 +31,11 @@ namespace JobFinder.Application.JobScoring
             No explanations. No markdown. No text outside JSON.
 
             SCORING RULES (be strict):
-            - CANDIDATE CORE SKILLS: 0–30 (backend, architecture, core programming, domain fit)
-            - FRONTEND SKILLS: 0–30 (JS frameworks, CSS, frontend architecture)
-            - CMS EXPERIENCE: 0–30 (Optimizely, Umbraco, CMS relevance)
-            - PREVIOUS EXPERIENCE: 0–5 (project relevance, industry similarity)
-            - seniority: 0–5 (seniority and role alignment)
+            - CANDIDATE CORE SKILLS: 0–{{CORE_MAX}} (backend, architecture, core programming, domain fit)
+            - FRONTEND SKILLS: 0–{{FRONTEND_MAX}} (JS frameworks, CSS, frontend architecture)
+            - CMS EXPERIENCE: 0–{{CMS_MAX}} (Optimizely, Umbraco, CMS relevance)
+            - PREVIOUS EXPERIENCE: 0–{{EXPERIENCE_MAX}} (project relevance, industry similarity)
+            - seniority: 0–{{SENIORITY_MAX}} (seniority and role alignment)
 
             CANDIDATE CORE SKILLS:
             {{string.Join(", ", ad.UserJobSkills.CoreSkills)}}

@@ -12,9 +12,6 @@
         public string? OptimizedCv { get; set; }
         public double? CvScore { get; set; }
 
-        public Guid? UserProfileId { get; set; }
-        public UserProfile? UserProfile { get; set; }
-
         public const double MinimumScore = 70;
         public bool IsGoodMatch() => CvScore >= MinimumScore;
 

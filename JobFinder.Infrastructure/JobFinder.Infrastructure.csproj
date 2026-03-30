@@ -21,8 +21,4 @@
     <ProjectReference Include="..\JobFinder.Application\JobFinder.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="UserProfile\" />
-  </ItemGroup>
-
 </Project>

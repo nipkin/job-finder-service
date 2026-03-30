@@ -1,4 +1,3 @@
-using JobFinder.Api.Services;
 using JobFinder.Application;
 using JobFinder.Application.JobScoring;
 using JobFinder.Infrastructure;
@@ -17,7 +16,6 @@ builder.Services.AddDbContext<JobFinderDbContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddApplicationApi();
 builder.Services.AddInfrastructure();
-builder.Services.AddScoped<ITokenService, TokenService>();
 
 builder.Services.AddHttpClient<IJobScoringClient, JobScoringClient>(client =>
 {
