@@ -38,7 +38,7 @@ namespace JobFinder.Application.JobPostings
             var urls = adList.Select(a => a.WebpageUrl).ToHashSet();
             var existingUrls = await writer.GetExistingUrlsAsync(urls, ct);
 
-            foreach (var ad in ads)
+            foreach (var ad in adList)
             {
                 if (existingUrls.Contains(ad.WebpageUrl)) continue;
 
