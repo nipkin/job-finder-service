@@ -1,7 +1,6 @@
 using JobFinder.Application.Auth;
 using JobFinder.Application.JobPostings;
 using JobFinder.Application.JobScoring;
-using JobFinder.Application.JobSearch;
 using JobFinder.Application.UserProfile;
 using Microsoft.Extensions.DependencyInjection;
 

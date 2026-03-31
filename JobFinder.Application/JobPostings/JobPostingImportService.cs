@@ -34,10 +34,13 @@ namespace JobFinder.Application.JobPostings
         private async Task<int> ProcessAdsAsync(UserJobSkills userJobSkills, IEnumerable<JobSearchResult> ads, CancellationToken ct)
         {
             var savedCount = 0;
+            var adList = ads.ToList();
+            var urls = adList.Select(a => a.WebpageUrl).ToHashSet();
+            var existingUrls = await writer.GetExistingUrlsAsync(urls, ct);
 
             foreach (var ad in ads)
             {
-                if (await writer.JobPostExists(ad.WebpageUrl, ct)) continue;
+                if (existingUrls.Contains(ad.WebpageUrl)) continue;
 
                 var score = await scoringService.MatchesPromptScoreAsync(ToScoringRequest(userJobSkills, ad), ct);
                 var posting = JobPostingMapper.FromApi(ad, score);

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using System.Security.Cryptography;
 using System.Text;
 using DomainEntities = JobFinder.Domain.Entities;
@@ -8,6 +9,7 @@ namespace JobFinder.Application.Auth
     {
         private const int MinPasswordLength = 4;
         private const int MaxUserNameLength = 50;
+        private static readonly PasswordHasher<DomainEntities.UserProfile> _hasher = new();
 
         public async Task<RegisterUserResponse> RegisterAsync(RegisterUserRequest request, CancellationToken ct = default)
         {
@@ -17,7 +19,7 @@ namespace JobFinder.Application.Auth
             if (existing is not null)
                 throw new InvalidOperationException($"Username '{request.UserName}' is already taken.");
 
-            var passwordHash = HashPassword(request.Password);
+            var passwordHash = _hasher.HashPassword(null!, request.Password);
             var userProfile = DomainEntities.UserProfile.Create(request.UserName, passwordHash);
 
             repository.Add(userProfile);
@@ -35,8 +37,14 @@ namespace JobFinder.Application.Auth
                 throw new ArgumentException("Password is required.", nameof(request.Password));
 
             var userProfile = await repository.GetByUserNameAsync(request.UserName, ct);
-            if (userProfile is null || !VerifyPassword(request.Password, userProfile.PasswordHash))
+            if(userProfile is null)
+                throw new UnauthorizedAccessException("Invalid username.");
+            var result = _hasher.VerifyHashedPassword(userProfile, userProfile?.PasswordHash ?? string.Empty, request.Password);
+            if (result == PasswordVerificationResult.Failed)
                 throw new UnauthorizedAccessException("Invalid username or password.");
+            
+            if(userProfile == null)
+                return null!;
 
             return new LoginUserResponse(userProfile.Id, userProfile.UserName);
         }
@@ -57,38 +65,6 @@ namespace JobFinder.Application.Auth
 
             if (request.Password != request.ConfirmPassword)
                 throw new ArgumentException("Password and confirmation password do not match.", nameof(request.ConfirmPassword));
-        }
-
-        private static string HashPassword(string password)
-        {
-            var salt = RandomNumberGenerator.GetBytes(16);
-            var hash = Rfc2898DeriveBytes.Pbkdf2(
-                Encoding.UTF8.GetBytes(password),
-                salt,
-                iterations: 100_000,
-                HashAlgorithmName.SHA256,
-                outputLength: 32);
-
-            return $"{Convert.ToBase64String(salt)}:{Convert.ToBase64String(hash)}";
-        }
-
-        private static bool VerifyPassword(string password, string storedHash)
-        {
-            var parts = storedHash.Split(':');
-            if (parts.Length != 2)
-                return false;
-
-            var salt = Convert.FromBase64String(parts[0]);
-            var expectedHash = Convert.FromBase64String(parts[1]);
-
-            var actualHash = Rfc2898DeriveBytes.Pbkdf2(
-                Encoding.UTF8.GetBytes(password),
-                salt,
-                iterations: 100_000,
-                HashAlgorithmName.SHA256,
-                outputLength: 32);
-
-            return CryptographicOperations.FixedTimeEquals(actualHash, expectedHash);
         }
     }
 }

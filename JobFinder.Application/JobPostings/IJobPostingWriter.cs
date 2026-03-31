@@ -8,6 +8,7 @@ namespace JobFinder.Application.JobPostings
         void Add(JobPosting posting);
         Task SaveAsync(CancellationToken ct = default);
         Task<int> RemoveOutdatedAsync(CancellationToken ct = default);
+        Task<HashSet<string>> GetExistingUrlsAsync(IEnumerable<string> urls, CancellationToken ct);
         Task<bool> JobPostExists(string postingUrl, CancellationToken ct = default);
     }
 }
