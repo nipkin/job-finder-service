@@ -16,27 +16,23 @@ namespace JobFinder.Api.Controllers
             if (!ModelState.IsValid)
                 return ValidationProblem(ModelState);
 
-            try
+            var result = await authService.LoginAsync(
+                new LoginUserRequest(request.UserName, request.Password), ct);
+
+            if (!result.IsSuccess)
+                return StatusCode(result.Err!.StatusCode, new { result.Err.Message });
+
+            var token = tokenService.Generate(result.Value!.Id, result.Value.UserName);
+
+            Response.Cookies.Append("auth_token", token, new CookieOptions
             {
-                var result = await authService.LoginAsync(
-                    new LoginUserRequest(request.UserName, request.Password), ct);
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.UtcNow.AddHours(2)
+            });
 
-                var token = tokenService.Generate(result.Id, result.UserName);
-
-                Response.Cookies.Append("auth_token", token, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = true,
-                    SameSite = SameSiteMode.Strict,
-                    Expires = DateTimeOffset.UtcNow.AddHours(2)
-                });
-
-                return Ok(result);
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                return Unauthorized(new { ex.Message });
-            }
+            return Ok(result.Value);
         }
 
         [HttpGet("check")]
@@ -81,18 +77,14 @@ namespace JobFinder.Api.Controllers
             if (!ModelState.IsValid)
                 return ValidationProblem(ModelState);
 
-            try
-            {
-                var result = await authService.RegisterAsync(
-                    new RegisterUserRequest(request.UserName, request.Password, request.ConfirmPassword), 
-                    ct);
+            var result = await authService.RegisterAsync(
+                new RegisterUserRequest(request.UserName, request.Password, request.ConfirmPassword),
+                ct);
 
-                return Created($"/api/users/{result.Id}", result);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(new { ex.Message });
-            }
+            if (!result.IsSuccess)
+                return StatusCode(result.Err!.StatusCode, new { result.Err.Message });
+
+            return Created($"/api/users/{result.Value!.Id}", result.Value);
         }
     }
 }

@@ -16,4 +16,8 @@
     <ProjectReference Include="..\JobFinder.Infrastructure\JobFinder.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\Auth\" />
+  </ItemGroup>
+
 </Project>

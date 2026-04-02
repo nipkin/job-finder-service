@@ -4,12 +4,12 @@ namespace JobFinder.Application.UserProfile
 {
     public class UserProfileService(IUserProfileRepository repository) : IUserProfileService
     {
-        public async Task<UserProfileResponse?> GetByIdAsync(Guid id, CancellationToken ct = default)
+        public async Task<Result<UserProfileResponse>> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
             var userProfile = await repository.GetByIdAsync(id, ct);
 
             if (userProfile is null)
-                return null;
+                return Error.NotFound($"User '{id}' not found.");
 
             var skills = userProfile.UserSkills
                 .Select(s => new UserProfileSkillAreaResponse(s.Name, s.Skill, s.SkillWeight))
@@ -22,14 +22,14 @@ namespace JobFinder.Application.UserProfile
             return new UserProfileResponse(userProfile.Id, userProfile.UserName, skills, jobPostings);
         }
 
-        public async Task<UserProfileSkillAreaResponse?> CreateSkillArea(UserProfileSkillAreaRequest request)
+        public async Task<Result<UserProfileSkillAreaResponse>> CreateSkillArea(UserProfileSkillAreaRequest request)
         {
-            if (request is null || string.IsNullOrEmpty(request.Name)) 
-                return null;
+            if (string.IsNullOrEmpty(request.Name))
+                return Error.Validation("Skill area name is required.");
 
             var user = await repository.GetByIdAsync(request.UserId);
-            if(user is null) 
-                return null;
+            if (user is null)
+                return Error.NotFound($"User '{request.UserId}' not found.");
 
             var userSkillArea = new UserSkillArea { Name = request.Name, Skill = request.Skills, SkillWeight = request.SkillWeight };
             user.UserSkills.Add(userSkillArea);
@@ -38,22 +38,22 @@ namespace JobFinder.Application.UserProfile
             return new UserProfileSkillAreaResponse(userSkillArea.Name, userSkillArea.Skill, userSkillArea.SkillWeight);
         }
 
-        public async Task<string?> AddSkill(UserProfileSkillRequest request)
+        public async Task<Result<string>> AddSkill(UserProfileSkillRequest request)
         {
-            if (request is null || string.IsNullOrEmpty(request.Skill))
-                return null;
+            if (string.IsNullOrEmpty(request.Skill))
+                return Error.Validation("Skill is required.");
 
             var user = await repository.GetByIdAsync(request.UserId);
             if (user is null)
-                return null;
+                return Error.NotFound($"User '{request.UserId}' not found.");
 
             var skill = user.UserSkills.FirstOrDefault(skill => skill.Id == request.SkillId);
             if (skill is null)
-                return null;
+                return Error.NotFound($"Skill area '{request.SkillId}' not found.");
 
             skill.Skill.Add(request.Skill);
             await repository.SaveAsync();
-            
+
             return request.Skill;
         }
     }

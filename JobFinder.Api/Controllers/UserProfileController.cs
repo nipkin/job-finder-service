@@ -12,10 +12,10 @@ namespace JobFinder.Api.Controllers
         {
             var result = await userProfileService.GetByIdAsync(id, ct);
 
-            if (result is null)
-                return NotFound();
+            if (!result.IsSuccess)
+                return StatusCode(result.Err!.StatusCode, new { result.Err.Message });
 
-            return Ok(result);
+            return Ok(result.Value);
         }
     }
 }

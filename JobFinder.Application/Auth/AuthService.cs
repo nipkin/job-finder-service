@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Identity;
-using System.Security.Cryptography;
-using System.Text;
 using DomainEntities = JobFinder.Domain.Entities;
 
 namespace JobFinder.Application.Auth
@@ -11,13 +9,15 @@ namespace JobFinder.Application.Auth
         private const int MaxUserNameLength = 50;
         private static readonly PasswordHasher<DomainEntities.UserProfile> _hasher = new();
 
-        public async Task<RegisterUserResponse> RegisterAsync(RegisterUserRequest request, CancellationToken ct = default)
+        public async Task<Result<RegisterUserResponse>> RegisterAsync(RegisterUserRequest request, CancellationToken ct = default)
         {
-            ValidateRequest(request);
+            var validation = ValidateRequest(request);
+            if (!validation.IsSuccess)
+                return validation.Err!;
 
             var existing = await repository.GetByUserNameAsync(request.UserName, ct);
             if (existing is not null)
-                throw new InvalidOperationException($"Username '{request.UserName}' is already taken.");
+                return Error.Conflict($"Username '{request.UserName}' is already taken.");
 
             var passwordHash = _hasher.HashPassword(null!, request.Password);
             var userProfile = DomainEntities.UserProfile.Create(request.UserName, passwordHash);
@@ -28,43 +28,43 @@ namespace JobFinder.Application.Auth
             return new RegisterUserResponse(userProfile.Id, userProfile.UserName);
         }
 
-        public async Task<LoginUserResponse> LoginAsync(LoginUserRequest request, CancellationToken ct = default)
+        public async Task<Result<LoginUserResponse>> LoginAsync(LoginUserRequest request, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(request.UserName))
-                throw new ArgumentException("Username is required.", nameof(request.UserName));
+                return Error.Validation("Username is required.");
 
             if (string.IsNullOrWhiteSpace(request.Password))
-                throw new ArgumentException("Password is required.", nameof(request.Password));
+                return Error.Validation("Password is required.");
 
             var userProfile = await repository.GetByUserNameAsync(request.UserName, ct);
-            if(userProfile is null)
-                throw new UnauthorizedAccessException("Invalid username.");
-            var result = _hasher.VerifyHashedPassword(userProfile, userProfile?.PasswordHash ?? string.Empty, request.Password);
+            if (userProfile is null)
+                return Error.Unauthorized("Invalid username or password.");
+
+            var result = _hasher.VerifyHashedPassword(userProfile, userProfile.PasswordHash, request.Password);
             if (result == PasswordVerificationResult.Failed)
-                throw new UnauthorizedAccessException("Invalid username or password.");
-            
-            if(userProfile == null)
-                return null!;
+                return Error.Unauthorized("Invalid username or password.");
 
             return new LoginUserResponse(userProfile.Id, userProfile.UserName);
         }
 
-        private static void ValidateRequest(RegisterUserRequest request)
+        private static Result<bool> ValidateRequest(RegisterUserRequest request)
         {
             if (string.IsNullOrWhiteSpace(request.UserName))
-                throw new ArgumentException("Username is required.", nameof(request.UserName));
+                return Error.Validation("Username is required.");
 
             if (request.UserName.Length > MaxUserNameLength)
-                throw new ArgumentException($"Username must not exceed {MaxUserNameLength} characters.", nameof(request.UserName));
+                return Error.Validation($"Username must not exceed {MaxUserNameLength} characters.");
 
             if (string.IsNullOrWhiteSpace(request.Password))
-                throw new ArgumentException("Password is required.", nameof(request.Password));
+                return Error.Validation("Password is required.");
 
             if (request.Password.Length < MinPasswordLength)
-                throw new ArgumentException($"Password must be at least {MinPasswordLength} characters.", nameof(request.Password));
+                return Error.Validation($"Password must be at least {MinPasswordLength} characters.");
 
             if (request.Password != request.ConfirmPassword)
-                throw new ArgumentException("Password and confirmation password do not match.", nameof(request.ConfirmPassword));
+                return Error.Validation("Passwords do not match.");
+
+            return true;
         }
     }
 }
