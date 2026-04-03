@@ -3,7 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace JobFinder.Api.Services
+namespace JobFinder.Api.Features.Auth
 {
     public class TokenService(IConfiguration configuration) : ITokenService
     {
@@ -11,6 +11,8 @@ namespace JobFinder.Api.Services
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!));
 
+            var handler = new JwtSecurityTokenHandler();
+            handler.InboundClaimTypeMap.Clear();
             try
             {
                 return new JwtSecurityTokenHandler().ValidateToken(token, new TokenValidationParameters

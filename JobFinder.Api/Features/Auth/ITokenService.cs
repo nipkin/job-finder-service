@@ -1,4 +1,4 @@
-namespace JobFinder.Api.Services
+namespace JobFinder.Api.Features.Auth
 {
     public interface ITokenService
     {

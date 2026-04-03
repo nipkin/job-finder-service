@@ -1,4 +1,4 @@
-using JobFinder.Api.Services;
+using JobFinder.Api.Features.Auth;
 using JobFinder.Application;
 using JobFinder.Application.JobScoring;
 using JobFinder.Infrastructure;

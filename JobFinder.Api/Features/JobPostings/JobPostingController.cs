@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using JobFinder.Application.JobPostings;
 
-namespace JobFinder.Api.Controllers
+namespace JobFinder.Api.Features.JobPostings
 {
     [ApiController]
     [Route("api/[controller]")]

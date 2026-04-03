@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace JobFinder.Api.Requests
+namespace JobFinder.Api.Features.Auth
 {
     public class LoginRequest
     {

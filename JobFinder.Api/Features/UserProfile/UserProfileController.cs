@@ -1,7 +1,7 @@
 using JobFinder.Application.UserProfile;
 using Microsoft.AspNetCore.Mvc;
 
-namespace JobFinder.Api.Controllers
+namespace JobFinder.Api.Features.UserProfile
 {
     [ApiController]
     [Route("api/[controller]")]

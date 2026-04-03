@@ -1,10 +1,8 @@
-using JobFinder.Api.Requests;
-using JobFinder.Api.Services;
 using JobFinder.Application.Auth;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace JobFinder.Api.Controllers
+namespace JobFinder.Api.Features.Auth
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -44,14 +42,16 @@ namespace JobFinder.Api.Controllers
                 return Unauthorized(new { Message = "No auth token found." });
 
             var principal = tokenService.Validate(token);
-
             if (principal is null)
                 return Unauthorized(new { Message = "Invalid or expired token." });
 
-            var userId = Guid.Parse(principal.FindFirst(JwtRegisteredClaimNames.Sub)!.Value);
-            var userName = principal.FindFirst(JwtRegisteredClaimNames.UniqueName)!.Value;
+            var subClaim = principal.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
+            var userNameClaim = principal.FindFirst(JwtRegisteredClaimNames.UniqueName)?.Value;
 
-            var newToken = tokenService.Generate(userId, userName);
+            if (subClaim is null || userNameClaim is null || !Guid.TryParse(subClaim, out var userId))
+                return Unauthorized(new { Message = "Invalid token claims." });
+
+            var newToken = tokenService.Generate(userId, userNameClaim);
 
             Response.Cookies.Append("auth_token", newToken, new CookieOptions
             {
