@@ -1,4 +1,4 @@
-﻿namespace JobFinder.Application.UserProfile
+namespace JobFinder.Application.UserProfile
 {
-    public record UserProfileSkillAreaRequest(Guid UserId, string Name, ICollection<string> Skills, int SkillWeight);
+    public record UserProfileSkillAreaRequest(string Name, ICollection<string> Skills, int SkillWeight);
 }

@@ -1,5 +1,4 @@
-﻿using JobFinder.Application.JobPostings;
-using JobFinder.Domain.Entities;
+﻿using JobFinder.Domain.Entities;
 
 namespace JobFinder.Application.JobScoring
 {

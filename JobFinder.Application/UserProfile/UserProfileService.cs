@@ -21,14 +21,14 @@ namespace JobFinder.Application.UserProfile
             return new UserProfileResponse(userProfile.Id, userProfile.UserName, skills, jobPostings);
         }
 
-        public async Task<Result<UserProfileSkillAreaResponse>> CreateSkillArea(UserProfileSkillAreaRequest request)
+        public async Task<Result<UserProfileSkillAreaResponse>> CreateSkillArea(Guid userId, UserProfileSkillAreaRequest request)
         {
             if (string.IsNullOrEmpty(request.Name))
                 return Error.Validation("Skill area name is required.");
 
-            var user = await repository.GetByIdAsync(request.UserId);
+            var user = await repository.GetByIdAsync(userId);
             if (user is null)
-                return Error.NotFound($"User '{request.UserId}' not found.");
+                return Error.NotFound($"User '{userId}' not found.");
 
             var area = new UserSkillArea { Id = Guid.NewGuid(), Name = request.Name, SkillWeight = request.SkillWeight };
 
