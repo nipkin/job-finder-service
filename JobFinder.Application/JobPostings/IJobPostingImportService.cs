@@ -1,7 +1,7 @@
-﻿namespace JobFinder.Application.JobPostings
+namespace JobFinder.Application.JobPostings
 {
     public interface IJobPostingImportService
     {
-        Task ImportJobPostingsAsync(UserJobSkills userJobSkills, IEnumerable<string> terms, CancellationToken ct = default);
+        Task ImportJobPostingsAsync(ICollection<Domain.Entities.UserSkillArea> skillAreas, string cvText, IEnumerable<string> terms, CancellationToken ct = default);
     }
 }

@@ -12,6 +12,7 @@ namespace JobFinder.Infrastructure.UserProfile
         {
             return await db.UserProfiles
                 .Include(u => u.UserSkills)
+                    .ThenInclude(a => a.Skills)
                 .Include(u => u.JobPostings)
                 .FirstOrDefaultAsync(u => u.Id == id, ct);
         }

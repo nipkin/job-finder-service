@@ -12,9 +12,6 @@ var builder = Host.CreateApplicationBuilder(args);
 builder.Services.Configure<SearchOptions>(
     builder.Configuration.GetSection("SearchOptions")
 );
-builder.Services.Configure<JobSkills>(
-    builder.Configuration.GetSection("JobSkills")
-);
 
 builder.Services.AddDbContext<JobFinderDbContext>(options =>
               options.UseSqlServer(builder.Configuration.GetConnectionString("Default"), b => b.MigrationsAssembly("JobFinder.WorkerService")));

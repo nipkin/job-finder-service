@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace JobFinderService.Migrations
+namespace JobFinder.WorkerService.Migrations
 {
     [DbContext(typeof(JobFinderDbContext))]
     partial class JobFinderDbContextModelSnapshot : ModelSnapshot
@@ -103,22 +103,16 @@ namespace JobFinderService.Migrations
 
             modelBuilder.Entity("JobFinder.Domain.Entities.UserProfile", b =>
                 {
-                    b.OwnsMany("JobFinder.Domain.ValueObjects.UserSkillArea", "UserSkills", b1 =>
+                    b.OwnsMany("JobFinder.Domain.Entities.UserSkillArea", "UserSkills", b1 =>
                         {
                             b1.Property<Guid>("UserId")
                                 .HasColumnType("uniqueidentifier");
 
-                            b1.Property<int>("Id")
+                            b1.Property<Guid>("Id")
                                 .ValueGeneratedOnAdd()
-                                .HasColumnType("int");
-
-                            SqlServerPropertyBuilderExtensions.UseIdentityColumn(b1.Property<int>("Id"));
+                                .HasColumnType("uniqueidentifier");
 
                             b1.Property<string>("Name")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.PrimitiveCollection<string>("Skill")
                                 .IsRequired()
                                 .HasColumnType("nvarchar(max)");
 
@@ -131,6 +125,32 @@ namespace JobFinderService.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
+
+                            b1.OwnsMany("JobFinder.Domain.Entities.Skill", "Skills", b2 =>
+                                {
+                                    b2.Property<Guid>("UserSkillAreaUserId")
+                                        .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<Guid>("UserSkillAreaId")
+                                        .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<Guid>("Id")
+                                        .ValueGeneratedOnAdd()
+                                        .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<string>("Name")
+                                        .IsRequired()
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.HasKey("UserSkillAreaUserId", "UserSkillAreaId", "Id");
+
+                                    b2.ToTable("UserSkillAreaSkills", (string)null);
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("UserSkillAreaUserId", "UserSkillAreaId");
+                                });
+
+                            b1.Navigation("Skills");
                         });
 
                     b.Navigation("UserSkills");

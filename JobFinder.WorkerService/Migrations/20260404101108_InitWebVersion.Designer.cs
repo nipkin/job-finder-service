@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace JobFinderService.Migrations
+namespace JobFinder.WorkerService.Migrations
 {
     [DbContext(typeof(JobFinderDbContext))]
-    [Migration("20260321124731_AddUserProfile")]
-    partial class AddUserProfile
+    [Migration("20260404101108_InitWebVersion")]
+    partial class InitWebVersion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,15 +74,22 @@ namespace JobFinderService.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("CvText")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserName")
+                        .IsUnique();
 
                     b.ToTable("UserProfiles");
                 });
@@ -95,6 +102,61 @@ namespace JobFinderService.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("UserProfile");
+                });
+
+            modelBuilder.Entity("JobFinder.Domain.Entities.UserProfile", b =>
+                {
+                    b.OwnsMany("JobFinder.Domain.Entities.UserSkillArea", "UserSkills", b1 =>
+                        {
+                            b1.Property<Guid>("UserId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<Guid>("Id")
+                                .ValueGeneratedOnAdd()
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<int>("SkillWeight")
+                                .HasColumnType("int");
+
+                            b1.HasKey("UserId", "Id");
+
+                            b1.ToTable("UserSkillAreas", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+
+                            b1.OwnsMany("JobFinder.Domain.Entities.Skill", "Skills", b2 =>
+                                {
+                                    b2.Property<Guid>("UserSkillAreaUserId")
+                                        .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<Guid>("UserSkillAreaId")
+                                        .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<Guid>("Id")
+                                        .ValueGeneratedOnAdd()
+                                        .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<string>("Name")
+                                        .IsRequired()
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.HasKey("UserSkillAreaUserId", "UserSkillAreaId", "Id");
+
+                                    b2.ToTable("UserSkillAreaSkills", (string)null);
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("UserSkillAreaUserId", "UserSkillAreaId");
+                                });
+
+                            b1.Navigation("Skills");
+                        });
+
+                    b.Navigation("UserSkills");
                 });
 
             modelBuilder.Entity("JobFinder.Domain.Entities.UserProfile", b =>

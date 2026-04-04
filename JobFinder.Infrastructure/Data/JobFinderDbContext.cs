@@ -22,6 +22,10 @@ namespace JobFinder.Infrastructure.Data
                 {
                     sa.ToTable("UserSkillAreas");
                     sa.WithOwner().HasForeignKey("UserId");
+                    sa.OwnsMany(a => a.Skills, sk =>
+                    {
+                        sk.ToTable("UserSkillAreaSkills");
+                    });
                 });
             });
         }

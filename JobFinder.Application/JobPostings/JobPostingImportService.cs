@@ -10,12 +10,12 @@ namespace JobFinder.Application.JobPostings
         IJobScoringService scoringService,
         ILogger<JobPostingImportService> logger) : IJobPostingImportService
     {
-        public async Task ImportJobPostingsAsync(UserJobSkills userJobSkills, IEnumerable<string> terms, CancellationToken ct = default)
+        public async Task ImportJobPostingsAsync(ICollection<Domain.Entities.UserSkillArea> skillAreas, string cvText, IEnumerable<string> terms, CancellationToken ct = default)
         {
             logger.LogInformation("Import started at {time}", DateTimeOffset.Now);
 
             var ads = await FetchAllAdsAsync(terms, ct);
-            var savedCount = await ProcessAdsAsync(userJobSkills, ads, ct);
+            var savedCount = await ProcessAdsAsync(skillAreas, cvText, ads, ct);
 
             var deleted = await writer.RemoveOutdatedAsync(ct);
             await writer.SaveAsync(ct);
@@ -31,7 +31,7 @@ namespace JobFinder.Application.JobPostings
             return results.SelectMany(ads => ads).DistinctBy(ad => ad.WebpageUrl).ToList();
         }
 
-        private async Task<int> ProcessAdsAsync(UserJobSkills userJobSkills, IEnumerable<JobSearchResult> ads, CancellationToken ct)
+        private async Task<int> ProcessAdsAsync(ICollection<Domain.Entities.UserSkillArea> skillAreas, string cvText, IEnumerable<JobSearchResult> ads, CancellationToken ct)
         {
             var savedCount = 0;
             var adList = ads.ToList();
@@ -42,7 +42,7 @@ namespace JobFinder.Application.JobPostings
             {
                 if (existingUrls.Contains(ad.WebpageUrl)) continue;
 
-                var score = await scoringService.MatchesPromptScoreAsync(ToScoringRequest(userJobSkills, ad), ct);
+                var score = await scoringService.MatchesPromptScoreAsync(ToScoringRequest(skillAreas, cvText, ad), ct);
                 var posting = JobPostingMapper.FromApi(ad, score);
 
                 if (!posting.IsGoodMatch())
@@ -59,11 +59,12 @@ namespace JobFinder.Application.JobPostings
             return savedCount;
         }
 
-        private static JobScoringRequest ToScoringRequest(UserJobSkills userJobSkills, JobSearchResult ad) => new()
+        private static JobScoringRequest ToScoringRequest(ICollection<Domain.Entities.UserSkillArea> skillAreas, string cvText, JobSearchResult ad) => new()
         {
             Headline = ad.Headline,
             Description = ad.Description?.Text ?? string.Empty,
-            UserJobSkills = userJobSkills
+            CvText = cvText,
+            UserJobSkills = skillAreas
         };
     }
 }

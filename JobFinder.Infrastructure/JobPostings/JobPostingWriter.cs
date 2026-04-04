@@ -9,12 +9,18 @@ namespace JobFinder.Infrastructure.JobPostings
     {
         public void Remove(JobPosting posting)
         {
-            db.JobPostings.Remove(posting);
+            if(posting != null)
+            {
+                db.JobPostings.Remove(posting);
+            }
         }
 
         public void Add(JobPosting posting)
         {
-            db.JobPostings.Add(posting);
+            if (posting != null)
+            {
+                db.JobPostings.Add(posting);
+            }
         }
 
         public async Task SaveAsync(CancellationToken ct = default)

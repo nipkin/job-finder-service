@@ -7,12 +7,11 @@ namespace JobFinder.Application.UserProfile
         public async Task<Result<UserProfileResponse>> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
             var userProfile = await repository.GetByIdAsync(id, ct);
-
             if (userProfile is null)
                 return Error.NotFound($"User '{id}' not found.");
 
             var skills = userProfile.UserSkills
-                .Select(s => new UserProfileSkillAreaResponse(s.Name, s.Skill, s.SkillWeight))
+                .Select(s => new UserProfileSkillAreaResponse(s.Id, s.Name, s.Skills.Select(sk => new SkillResponse(sk.Id, sk.Name)).ToList(), s.SkillWeight))
                 .ToList();
 
             var jobPostings = userProfile.JobPostings
@@ -31,30 +30,90 @@ namespace JobFinder.Application.UserProfile
             if (user is null)
                 return Error.NotFound($"User '{request.UserId}' not found.");
 
-            var userSkillArea = new UserSkillArea { Name = request.Name, Skill = request.Skills, SkillWeight = request.SkillWeight };
-            user.UserSkills.Add(userSkillArea);
+            var area = new UserSkillArea { Id = Guid.NewGuid(), Name = request.Name, SkillWeight = request.SkillWeight };
+
+            foreach (var skillName in request.Skills)
+            {
+                var error = area.AddSkill(skillName);
+                if (error is not null) return Error.Validation(error);
+            }
+
+            user.UserSkills.Add(area);
             await repository.SaveAsync();
 
-            return new UserProfileSkillAreaResponse(userSkillArea.Name, userSkillArea.Skill, userSkillArea.SkillWeight);
+            var skills = area.Skills.Select(s => new SkillResponse(s.Id, s.Name)).ToList();
+            return new UserProfileSkillAreaResponse(area.Id, area.Name, skills, area.SkillWeight);
         }
 
-        public async Task<Result<string>> AddSkill(UserProfileSkillRequest request)
+        public async Task<Result> DeleteSkillArea(Guid userId, Guid areaId)
         {
-            if (string.IsNullOrEmpty(request.Skill))
-                return Error.Validation("Skill is required.");
-
-            var user = await repository.GetByIdAsync(request.UserId);
+            var user = await repository.GetByIdAsync(userId);
             if (user is null)
-                return Error.NotFound($"User '{request.UserId}' not found.");
+                return Error.NotFound($"User '{userId}' not found.");
 
-            var skill = user.UserSkills.FirstOrDefault(skill => skill.Id == request.SkillId);
-            if (skill is null)
-                return Error.NotFound($"Skill area '{request.SkillId}' not found.");
+            var area = user.UserSkills.FirstOrDefault(a => a.Id == areaId);
+            if (area is null)
+                return Error.NotFound($"Skill area '{areaId}' not found.");
 
-            skill.Skill.Add(request.Skill);
+            user.UserSkills.Remove(area);
             await repository.SaveAsync();
 
-            return request.Skill;
+            return Result.Ok();
+        }
+
+        public async Task<Result<SkillResponse>> AddSkill(Guid userId, Guid areaId, string name)
+        {
+            var user = await repository.GetByIdAsync(userId);
+            if (user is null)
+                return Error.NotFound($"User '{userId}' not found.");
+
+            var area = user.UserSkills.FirstOrDefault(a => a.Id == areaId);
+            if (area is null)
+                return Error.NotFound($"Skill area '{areaId}' not found.");
+
+            var error = area.AddSkill(name);
+            if (error is not null) return Error.Validation(error);
+
+            await repository.SaveAsync();
+
+            var skill = area.Skills.First(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            return new SkillResponse(skill.Id, skill.Name);
+        }
+
+        public async Task<Result<SkillResponse>> UpdateSkill(Guid userId, Guid skillId, string name)
+        {
+            var user = await repository.GetByIdAsync(userId);
+            if (user is null)
+                return Error.NotFound($"User '{userId}' not found.");
+
+            var area = user.UserSkills.FirstOrDefault(a => a.Skills.Any(s => s.Id == skillId));
+            if (area is null)
+                return Error.NotFound($"Skill '{skillId}' not found.");
+
+            var error = area.UpdateSkill(skillId, name);
+            if (error is not null) return Error.Validation(error);
+
+            await repository.SaveAsync();
+
+            var skill = area.Skills.First(s => s.Id == skillId);
+            return new SkillResponse(skill.Id, skill.Name);
+        }
+
+        public async Task<Result> RemoveSkill(Guid userId, Guid skillId)
+        {
+            var user = await repository.GetByIdAsync(userId);
+            if (user is null)
+                return Error.NotFound($"User '{userId}' not found.");
+
+            var area = user.UserSkills.FirstOrDefault(a => a.Skills.Any(s => s.Id == skillId));
+            if (area is null)
+                return Error.NotFound($"Skill '{skillId}' not found.");
+
+            var error = area.RemoveSkill(skillId);
+            if (error is not null) return Error.Validation(error);
+
+            await repository.SaveAsync();
+            return Result.Ok();
         }
     }
 }
