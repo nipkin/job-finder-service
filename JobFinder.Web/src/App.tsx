@@ -6,6 +6,7 @@ import Start from './pages/Start';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import MyPage from './pages/MyPage';
+import MySkillAreas from './pages/MySkillAreas';
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                         <Route path="/register" element={<Register />} />
                         <Route element={<ProtectedRoute />}>
                             <Route path="/my-page" element={<MyPage />} />
+                            <Route path="/my-skill-areas" element={<MySkillAreas />} />
                         </Route>
                     </Route>
                 </Routes>

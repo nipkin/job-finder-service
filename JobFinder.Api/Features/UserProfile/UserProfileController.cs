@@ -1,7 +1,6 @@
 using JobFinder.Application.UserProfile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace JobFinder.Api.Features.UserProfile
@@ -11,7 +10,7 @@ namespace JobFinder.Api.Features.UserProfile
     [Route("api/userprofile")]
     public class UserProfileController(IUserProfileService userProfileService) : ControllerBase
     {
-        private Guid UserId => Guid.Parse(User.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
+        private Guid UserId => Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
         [HttpGet]
         public async Task<IActionResult> GetAsync(CancellationToken ct)

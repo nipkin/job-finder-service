@@ -1,6 +1,7 @@
 using JobFinder.Application.Auth;
 using Microsoft.AspNetCore.Mvc;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace JobFinder.Api.Features.Auth
 {
@@ -45,8 +46,8 @@ namespace JobFinder.Api.Features.Auth
             if (principal is null)
                 return Unauthorized(new { Message = "Invalid or expired token." });
 
-            var subClaim = principal.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
-            var userNameClaim = principal.FindFirst(JwtRegisteredClaimNames.UniqueName)?.Value;
+            var subClaim = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var userNameClaim = principal.FindFirst(ClaimTypes.Name)?.Value;
 
             if (subClaim is null || userNameClaim is null || !Guid.TryParse(subClaim, out var userId))
                 return Unauthorized(new { Message = "Invalid token claims." });
