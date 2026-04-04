@@ -11,7 +11,7 @@ namespace JobFinder.Application.UserProfile
                 return Error.NotFound($"User '{id}' not found.");
 
             var skills = userProfile.UserSkillAreas
-                .Select(s => new UserProfileSkillAreaResponse(s.Id, s.Name, s.UserSkills.Select(sk => new SkillResponse(sk.Id, sk.Name)).ToList(), s.SkillWeight))
+                .Select(s => new UserProfileSkillAreaResponse(s.Id, s.Name, s.UserSkills.Select(sk => new UserSkillResponse(sk.Id, sk.Name)).ToList(), s.SkillWeight))
                 .ToList();
 
             var jobPostings = userProfile.JobPostings
@@ -41,7 +41,7 @@ namespace JobFinder.Application.UserProfile
             user.UserSkillAreas.Add(area);
             await repository.SaveAsync();
 
-            var skills = area.UserSkills.Select(s => new SkillResponse(s.Id, s.Name)).ToList();
+            var skills = area.UserSkills.Select(s => new UserSkillResponse(s.Id, s.Name)).ToList();
             return new UserProfileSkillAreaResponse(area.Id, area.Name, skills, area.SkillWeight);
         }
 
@@ -61,7 +61,7 @@ namespace JobFinder.Application.UserProfile
             return Result.Ok();
         }
 
-        public async Task<Result<SkillResponse>> AddSkill(Guid userId, Guid areaId, string name)
+        public async Task<Result<UserSkillResponse>> AddSkill(Guid userId, Guid areaId, string name)
         {
             var user = await repository.GetByIdAsync(userId);
             if (user is null)
@@ -77,10 +77,10 @@ namespace JobFinder.Application.UserProfile
             await repository.SaveAsync();
 
             var skill = area.UserSkills.First(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-            return new SkillResponse(skill.Id, skill.Name);
+            return new UserSkillResponse(skill.Id, skill.Name);
         }
 
-        public async Task<Result<SkillResponse>> UpdateSkill(Guid userId, Guid skillId, string name)
+        public async Task<Result<UserSkillResponse>> UpdateSkill(Guid userId, Guid skillId, string name)
         {
             var user = await repository.GetByIdAsync(userId);
             if (user is null)
@@ -96,7 +96,7 @@ namespace JobFinder.Application.UserProfile
             await repository.SaveAsync();
 
             var skill = area.UserSkills.First(s => s.Id == skillId);
-            return new SkillResponse(skill.Id, skill.Name);
+            return new UserSkillResponse(skill.Id, skill.Name);
         }
 
         public async Task<Result> RemoveSkill(Guid userId, Guid skillId)
