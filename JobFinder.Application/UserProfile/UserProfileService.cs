@@ -10,8 +10,8 @@ namespace JobFinder.Application.UserProfile
             if (userProfile is null)
                 return Error.NotFound($"User '{id}' not found.");
 
-            var skills = userProfile.UserSkills
-                .Select(s => new UserProfileSkillAreaResponse(s.Id, s.Name, s.Skills.Select(sk => new SkillResponse(sk.Id, sk.Name)).ToList(), s.SkillWeight))
+            var skills = userProfile.UserSkillAreas
+                .Select(s => new UserProfileSkillAreaResponse(s.Id, s.Name, s.UserSkills.Select(sk => new SkillResponse(sk.Id, sk.Name)).ToList(), s.SkillWeight))
                 .ToList();
 
             var jobPostings = userProfile.JobPostings
@@ -38,10 +38,10 @@ namespace JobFinder.Application.UserProfile
                 if (error is not null) return Error.Validation(error);
             }
 
-            user.UserSkills.Add(area);
+            user.UserSkillAreas.Add(area);
             await repository.SaveAsync();
 
-            var skills = area.Skills.Select(s => new SkillResponse(s.Id, s.Name)).ToList();
+            var skills = area.UserSkills.Select(s => new SkillResponse(s.Id, s.Name)).ToList();
             return new UserProfileSkillAreaResponse(area.Id, area.Name, skills, area.SkillWeight);
         }
 
@@ -51,11 +51,11 @@ namespace JobFinder.Application.UserProfile
             if (user is null)
                 return Error.NotFound($"User '{userId}' not found.");
 
-            var area = user.UserSkills.FirstOrDefault(a => a.Id == areaId);
+            var area = user.UserSkillAreas.FirstOrDefault(a => a.Id == areaId);
             if (area is null)
                 return Error.NotFound($"Skill area '{areaId}' not found.");
 
-            user.UserSkills.Remove(area);
+            user.UserSkillAreas.Remove(area);
             await repository.SaveAsync();
 
             return Result.Ok();
@@ -67,7 +67,7 @@ namespace JobFinder.Application.UserProfile
             if (user is null)
                 return Error.NotFound($"User '{userId}' not found.");
 
-            var area = user.UserSkills.FirstOrDefault(a => a.Id == areaId);
+            var area = user.UserSkillAreas.FirstOrDefault(a => a.Id == areaId);
             if (area is null)
                 return Error.NotFound($"Skill area '{areaId}' not found.");
 
@@ -76,7 +76,7 @@ namespace JobFinder.Application.UserProfile
 
             await repository.SaveAsync();
 
-            var skill = area.Skills.First(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            var skill = area.UserSkills.First(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
             return new SkillResponse(skill.Id, skill.Name);
         }
 
@@ -86,7 +86,7 @@ namespace JobFinder.Application.UserProfile
             if (user is null)
                 return Error.NotFound($"User '{userId}' not found.");
 
-            var area = user.UserSkills.FirstOrDefault(a => a.Skills.Any(s => s.Id == skillId));
+            var area = user.UserSkillAreas.FirstOrDefault(a => a.UserSkills.Any(s => s.Id == skillId));
             if (area is null)
                 return Error.NotFound($"Skill '{skillId}' not found.");
 
@@ -95,7 +95,7 @@ namespace JobFinder.Application.UserProfile
 
             await repository.SaveAsync();
 
-            var skill = area.Skills.First(s => s.Id == skillId);
+            var skill = area.UserSkills.First(s => s.Id == skillId);
             return new SkillResponse(skill.Id, skill.Name);
         }
 
@@ -105,7 +105,7 @@ namespace JobFinder.Application.UserProfile
             if (user is null)
                 return Error.NotFound($"User '{userId}' not found.");
 
-            var area = user.UserSkills.FirstOrDefault(a => a.Skills.Any(s => s.Id == skillId));
+            var area = user.UserSkillAreas.FirstOrDefault(a => a.UserSkills.Any(s => s.Id == skillId));
             if (area is null)
                 return Error.NotFound($"Skill '{skillId}' not found.");
 

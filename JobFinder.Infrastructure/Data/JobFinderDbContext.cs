@@ -18,11 +18,11 @@ namespace JobFinder.Infrastructure.Data
                 .OnDelete(DeleteBehavior.SetNull);
             modelBuilder.Entity<Domain.Entities.UserProfile>(b =>
             {
-                b.OwnsMany(u => u.UserSkills, sa =>
+                b.OwnsMany(u => u.UserSkillAreas, sa =>
                 {
                     sa.ToTable("UserSkillAreas");
                     sa.WithOwner().HasForeignKey("UserId");
-                    sa.OwnsMany(a => a.Skills, sk =>
+                    sa.OwnsMany(a => a.UserSkills, sk =>
                     {
                         sk.ToTable("UserSkillAreaSkills");
                     });

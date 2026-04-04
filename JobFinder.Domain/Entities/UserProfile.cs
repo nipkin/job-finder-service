@@ -10,7 +10,7 @@ namespace JobFinder.Domain.Entities
         public string UserName { get; private set; } = string.Empty;
         public string PasswordHash { get; private set; } = string.Empty;
 
-        public ICollection<UserSkillArea> UserSkills { get; set; } = [];
+        public ICollection<UserSkillArea> UserSkillAreas { get; set; } = [];
         public string CvText { get; set; } = string.Empty;
         public ICollection<JobPosting> JobPostings { get; set; } = [];
 

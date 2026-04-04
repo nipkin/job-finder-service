@@ -20,6 +20,6 @@ IServiceScopeFactory scopeFactory) : BackgroundService
         var userProfile = await userProfileRepo.GetByIdAsync(_options.UserProfileId, ct);
         if (userProfile is null) return;
 
-        await importService.ImportJobPostingsAsync(userProfile.UserSkills, userProfile.CvText, _options.SearchTerms, ct);
+        await importService.ImportJobPostingsAsync(userProfile.UserSkillAreas, userProfile.CvText, _options.SearchTerms, ct);
     }
 }

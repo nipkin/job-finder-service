@@ -11,8 +11,8 @@ namespace JobFinder.Infrastructure.UserProfile
         public async Task<DomainEntities.UserProfile?> GetByIdAsync(Guid id, CancellationToken ct = default)
         {
             return await db.UserProfiles
-                .Include(u => u.UserSkills)
-                    .ThenInclude(a => a.Skills)
+                .Include(u => u.UserSkillAreas)
+                    .ThenInclude(a => a.UserSkills)
                 .Include(u => u.JobPostings)
                 .FirstOrDefaultAsync(u => u.Id == id, ct);
         }

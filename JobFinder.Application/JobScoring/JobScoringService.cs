@@ -25,7 +25,7 @@ namespace JobFinder.Application.JobScoring
             for (int i = 0; i < skillAreas.Count; i++)
             {
                 var area = skillAreas[i];
-                rules.AppendLine($"- s{i}: 0-{area.SkillWeight} ({area.Name}: {string.Join(", ", area.Skills.Select(s => s.Name))})");
+                rules.AppendLine($"- s{i}: 0-{area.SkillWeight} ({area.Name}: {string.Join(", ", area.UserSkills.Select(s => s.Name))})");
             }
 
             var jsonFormat = new StringBuilder();
