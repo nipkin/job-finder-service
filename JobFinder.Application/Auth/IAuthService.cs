@@ -2,7 +2,7 @@ namespace JobFinder.Application.Auth
 {
     public interface IAuthService
     {
-        Task<Result<RegisterUserResponse>> RegisterAsync(RegisterUserRequest request, CancellationToken ct = default);
-        Task<Result<LoginUserResponse>> LoginAsync(LoginUserRequest request, CancellationToken ct = default);
+        Task<Result<RegisterUserResult>> RegisterAsync(RegisterUserCommand request, CancellationToken ct = default);
+        Task<Result<LoginUserResult>> LoginAsync(LoginUserCommand request, CancellationToken ct = default);
     }
 }

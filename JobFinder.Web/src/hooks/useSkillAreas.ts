@@ -24,6 +24,11 @@ export function useSkillAreas() {
     setSkillAreas(prev => [...prev, area]);
   }
 
+  async function updateArea(areaId: string, name: string, skillWeight: number) {
+    const area = await userProfileService.updateSkillArea(areaId, name, skillWeight);
+    setSkillAreas(prev => prev.map(a => a.id === areaId ? { ...a, name: area.name, skillWeight: area.skillWeight } : a));
+  }
+
   async function deleteArea(areaId: string) {
     await userProfileService.deleteSkillArea(areaId);
     setSkillAreas(prev => prev.filter(a => a.id !== areaId));
@@ -56,5 +61,5 @@ export function useSkillAreas() {
     );
   }
 
-  return { skillAreas, loading, error, createArea, deleteArea, addSkill, updateSkill, removeSkill };
+  return { skillAreas, loading, error, createArea, updateArea, deleteArea, addSkill, updateSkill, removeSkill };
 }

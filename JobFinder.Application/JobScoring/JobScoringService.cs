@@ -6,7 +6,7 @@ namespace JobFinder.Application.JobScoring
 {
     public class JobScoringService(IJobScoringClient client) : IJobScoringService
     {
-        public async Task<int> MatchesPromptScoreAsync(JobScoringRequest request, CancellationToken ct = default)
+        public async Task<int> MatchesPromptScoreAsync(JobScoringCommand request, CancellationToken ct = default)
         {
             var skillAreas = request.UserJobSkills.ToList();
             var prompt = BuildScoringPrompt(skillAreas, request.CvText, request.Headline, request.Description);

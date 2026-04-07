@@ -16,7 +16,7 @@ namespace JobFinder.Api.Features.Auth
                 return ValidationProblem(ModelState);
 
             var result = await authService.LoginAsync(
-                new LoginUserRequest(request.UserName, request.Password), ct);
+                new LoginUserCommand(request.UserName, request.Password), ct);
 
             if (!result.IsSuccess)
                 return StatusCode(result.Err!.StatusCode, new { result.Err.Message });
@@ -79,7 +79,7 @@ namespace JobFinder.Api.Features.Auth
                 return ValidationProblem(ModelState);
 
             var result = await authService.RegisterAsync(
-                new RegisterUserRequest(request.UserName, request.Password, request.ConfirmPassword),
+                new RegisterUserCommand(request.UserName, request.Password, request.ConfirmPassword),
                 ct);
 
             if (!result.IsSuccess)

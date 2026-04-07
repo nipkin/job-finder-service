@@ -1,6 +1,6 @@
 ﻿namespace JobFinder.Application.JobPostings
 {
-    public class JobPostingResponse
+    public class JobPostingResult
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public string Headline { get; set; } = string.Empty;

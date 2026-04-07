@@ -6,7 +6,7 @@ namespace JobFinder.Application.JobPostings
 {
     public static class JobPostingMapper
     {
-        public static JobPostingResponse ToResponse(JobPosting jobPosting) => new()
+        public static JobPostingResult ToResponse(JobPosting jobPosting) => new()
         {
             Id = jobPosting.Id,
             Headline = jobPosting.Headline,

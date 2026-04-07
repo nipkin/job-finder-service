@@ -2,6 +2,6 @@
 {
     public interface IJobScoringService
     {
-        Task<int> MatchesPromptScoreAsync(JobScoringRequest ad, CancellationToken ct = default);
+        Task<int> MatchesPromptScoreAsync(JobScoringCommand ad, CancellationToken ct = default);
     }
 }

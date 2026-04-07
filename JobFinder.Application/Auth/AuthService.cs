@@ -8,7 +8,7 @@ namespace JobFinder.Application.Auth
         private const int MinPasswordLength = 4;
         private static readonly PasswordHasher<DomainEntities.UserProfile> _hasher = new();
 
-        public async Task<Result<RegisterUserResponse>> RegisterAsync(RegisterUserRequest request, CancellationToken ct = default)
+        public async Task<Result<RegisterUserResult>> RegisterAsync(RegisterUserCommand request, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(request.Password))
                 return Error.Validation("Password is required.");
@@ -30,10 +30,10 @@ namespace JobFinder.Application.Auth
             repository.Add(userProfile!);
             await repository.SaveAsync(ct);
 
-            return new RegisterUserResponse(userProfile!.Id, userProfile.UserName);
+            return new RegisterUserResult(userProfile!.Id, userProfile.UserName);
         }
 
-        public async Task<Result<LoginUserResponse>> LoginAsync(LoginUserRequest request, CancellationToken ct = default)
+        public async Task<Result<LoginUserResult>> LoginAsync(LoginUserCommand request, CancellationToken ct = default)
         {
             if (string.IsNullOrWhiteSpace(request.UserName))
                 return Error.Validation("Username is required.");
@@ -49,7 +49,7 @@ namespace JobFinder.Application.Auth
             if (result == PasswordVerificationResult.Failed)
                 return Error.Unauthorized("Invalid username or password.");
 
-            return new LoginUserResponse(userProfile.Id, userProfile.UserName);
+            return new LoginUserResult(userProfile.Id, userProfile.UserName);
         }
     }
 }

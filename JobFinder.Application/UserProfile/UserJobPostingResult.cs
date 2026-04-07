@@ -1,6 +1,6 @@
 namespace JobFinder.Application.UserProfile
 {
-    public record UserProfileJobPostingResponse(
+    public record UserJobPostingResult(
         Guid Id,
         string Headline,
         string? Region,

@@ -2,6 +2,6 @@
 {
     public interface IJobPostingProviderService
     {
-        Task<IReadOnlyList<JobPostingResponse>> GetAllPostingsAsync();
+        Task<IReadOnlyList<JobPostingResult>> GetAllPostingsAsync();
     }
 }

@@ -59,7 +59,7 @@ namespace JobFinder.Application.JobPostings
             return savedCount;
         }
 
-        private static JobScoringRequest ToScoringRequest(ICollection<Domain.Entities.UserSkillArea> skillAreas, string cvText, JobSearchResult ad) => new()
+        private static JobScoringCommand ToScoringRequest(ICollection<Domain.Entities.UserSkillArea> skillAreas, string cvText, JobSearchResult ad) => new()
         {
             Headline = ad.Headline,
             Description = ad.Description?.Text ?? string.Empty,

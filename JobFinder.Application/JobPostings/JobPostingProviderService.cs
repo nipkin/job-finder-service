@@ -2,7 +2,7 @@
 {
     public class JobPostingProviderService(IJobPostingReader reader) : IJobPostingProviderService
     {
-        public async Task<IReadOnlyList<JobPostingResponse>> GetAllPostingsAsync()
+        public async Task<IReadOnlyList<JobPostingResult>> GetAllPostingsAsync()
         {
             var results = await reader.GetAllAsync();
             return results.Select(JobPostingMapper.ToResponse).ToList();

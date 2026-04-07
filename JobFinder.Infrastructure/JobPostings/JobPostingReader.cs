@@ -1,7 +1,7 @@
-﻿using JobFinder.Application.JobPostings;
-using JobFinder.Infrastructure.Data;
+﻿using JobFinder.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using JobFinder.Domain.Entities;
+using JobFinder.Application.JobPostings;
 
 namespace JobFinder.Infrastructure.JobPostings
 {

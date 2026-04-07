@@ -2,7 +2,7 @@
 
 namespace JobFinder.Application.JobScoring
 {
-    public class JobScoringRequest
+    public class JobScoringCommand
     {
         public string Headline { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;

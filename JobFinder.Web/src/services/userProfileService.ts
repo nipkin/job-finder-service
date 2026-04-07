@@ -44,6 +44,13 @@ function createSkillArea(name: string, skillWeight: number): Promise<SkillArea> 
   });
 }
 
+function updateSkillArea(areaId: string, name: string, skillWeight: number): Promise<SkillArea> {
+  return request(`${BASE_URL}/skillareas/${areaId}`, {
+    method: 'PUT',
+    body: JSON.stringify({ name, skillWeight }),
+  });
+}
+
 function deleteSkillArea(areaId: string): Promise<void> {
   return request(`${BASE_URL}/skillareas/${areaId}`, { method: 'DELETE' });
 }
@@ -69,6 +76,7 @@ function removeSkill(skillId: string): Promise<void> {
 export const userProfileService = {
   getProfile,
   createSkillArea,
+  updateSkillArea,
   deleteSkillArea,
   addSkill,
   updateSkill,
