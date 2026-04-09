@@ -8,7 +8,6 @@ import Register from './pages/Register';
 import MyPage from './pages/MyPage';
 import MySkillAreas from './pages/MySkillAreas';
 import MyCv from './pages/MyCv';
-import MySearchTerms from './pages/MySearchTerms';
 import RunJobMatch from './pages/RunJobMatch';
 import MyJobPostings from './pages/MyJobPostings';
 
@@ -26,7 +25,6 @@ function App() {
                             <Route path="/my-page" element={<MyPage />} />
                             <Route path="/my-skill-areas" element={<MySkillAreas />} />
                             <Route path="/my-cv" element={<MyCv />} />
-                            <Route path="/my-search-terms" element={<MySearchTerms />} />
                             <Route path="/run-job-match" element={<RunJobMatch />} />
                             <Route path="/my-job-postings" element={<MyJobPostings />} />
                         </Route>
