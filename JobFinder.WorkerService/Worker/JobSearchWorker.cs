@@ -1,5 +1,5 @@
+using JobFinder.Application.Common;
 using JobFinder.Application.JobPostings;
-using JobFinder.Application.UserProfile;
 using JobFinder.WorkerService.Configuration;
 using Microsoft.Extensions.Options;
 
@@ -20,6 +20,6 @@ IServiceScopeFactory scopeFactory) : BackgroundService
         var userProfile = await userProfileRepo.GetByIdAsync(_options.UserProfileId, ct);
         if (userProfile is null) return;
 
-        await importService.ImportJobPostingsAsync(userProfile.UserSkillAreas, userProfile.CvText, _options.SearchTerms, ct);
+        await importService.ImportJobPostingsAsync(_options.UserProfileId, ct: ct);
     }
 }

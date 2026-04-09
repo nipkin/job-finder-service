@@ -7,5 +7,11 @@
             var results = await reader.GetAllAsync();
             return results.Select(JobPostingMapper.ToResponse).ToList();
         }
+
+        public async Task<IReadOnlyList<JobPostingResult>> GetUserPostingsAsync(Guid userId, CancellationToken ct = default)
+        {
+            var results = await reader.GetByUserIdAsync(userId, ct);
+            return results.Select(JobPostingMapper.ToResponse).ToList();
+        }
     }
 }

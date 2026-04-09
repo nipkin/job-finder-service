@@ -1,4 +1,5 @@
-﻿using JobFinder.Application.UserProfile.UserSkills;
+﻿using JobFinder.Application.Common;
+using JobFinder.Application.UserProfile.UserSkills;
 using JobFinder.Domain.Entities;
 
 namespace JobFinder.Application.UserProfile.UserSkillAreas
@@ -10,7 +11,7 @@ namespace JobFinder.Application.UserProfile.UserSkillAreas
             if (string.IsNullOrEmpty(request.Name))
                 return Error.Validation("Skill area name is required.");
 
-            var user = await repository.GetByIdAsync(userId);
+            var user = await repository.GetProfileShallowAsync(userId);
             if (user is null)
                 return Error.NotFound($"User '{userId}' not found.");
 
@@ -37,7 +38,7 @@ namespace JobFinder.Application.UserProfile.UserSkillAreas
             if (command.SkillWeight < 1 || command.SkillWeight > 5)
                 return Error.Validation("Skill weight must be between 1 and 5.");
 
-            var user = await repository.GetByIdAsync(userId);
+            var user = await repository.GetProfileWithSkillAreaAsync(userId, areaId);
             if (user is null)
                 return Error.NotFound($"User '{userId}' not found.");
 
@@ -55,7 +56,7 @@ namespace JobFinder.Application.UserProfile.UserSkillAreas
 
         public async Task<Result> DeleteSkillAreaAsync(Guid userId, Guid areaId)
         {
-            var user = await repository.GetByIdAsync(userId);
+            var user = await repository.GetProfileWithSkillAreaAsync(userId, areaId);
             if (user is null)
                 return Error.NotFound($"User '{userId}' not found.");
 

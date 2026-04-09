@@ -1,7 +1,9 @@
-﻿namespace JobFinder.Application.JobSearch
+﻿using JobFinder.Domain.Entities;
+
+namespace JobFinder.Application.JobSearch
 {
     public interface IJobSearchTermsService
     {
-        public IEnumerable<string> GenerateTerms();
+        Task<Result<List<string>>> GenerateSearchTermsAsync(ICollection<UserSkillArea> userSkillAreas, CancellationToken ct = default);
     }
 }

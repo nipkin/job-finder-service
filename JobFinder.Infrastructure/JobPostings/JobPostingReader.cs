@@ -11,5 +11,13 @@ namespace JobFinder.Infrastructure.JobPostings
         {
             return await db.JobPostings.ToListAsync();
         }
+
+        public async Task<IReadOnlyList<JobPosting>> GetByUserIdAsync(Guid userId, CancellationToken ct = default)
+        {
+            return await db.JobPostings
+                .Where(j => j.UserProfileId == userId)
+                .OrderByDescending(j => j.CreatedAtUtc)
+                .ToListAsync(ct);
+        }
     }
 }

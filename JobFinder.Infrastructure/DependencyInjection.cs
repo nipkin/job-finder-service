@@ -1,8 +1,8 @@
 using JobFinder.Application.Auth;
+using JobFinder.Application.Common;
 using JobFinder.Application.JobPostings;
 using JobFinder.Application.JobScoring;
 using JobFinder.Application.JobSearch;
-using JobFinder.Application.UserProfile;
 using JobFinder.Infrastructure.Auth;
 using JobFinder.Infrastructure.JobPostings;
 using JobFinder.Infrastructure.JobScoring;
@@ -16,6 +16,7 @@ namespace JobFinder.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
+            services.AddSingleton<IJobMatchRunner, JobMatchRunner>();
             services.AddScoped<IJobPostingWriter, JobPostingWriter>();
             services.AddScoped<IJobPostingReader, JobPostingReader>();
             services.AddScoped<IUserProfileRepository, UserProfileRepository>();

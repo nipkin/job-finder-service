@@ -1,3 +1,4 @@
+using JobFinder.Api.Configuration;
 using JobFinder.Api.Features.Auth;
 using JobFinder.Application;
 using JobFinder.Application.JobScoring;
@@ -14,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<JobFinderDbContext>(options =>
               options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
+builder.Services.Configure<JobMatchOptions>(builder.Configuration.GetSection("JobMatch"));
 builder.Services.AddControllers();
 builder.Services.AddApplicationApi();
 builder.Services.AddInfrastructure();

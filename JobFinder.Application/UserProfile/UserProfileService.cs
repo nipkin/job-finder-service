@@ -1,3 +1,4 @@
+using JobFinder.Application.Common;
 using JobFinder.Application.UserProfile.UserSkillAreas;
 using JobFinder.Application.UserProfile.UserSkills;
 

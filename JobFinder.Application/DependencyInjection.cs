@@ -1,6 +1,7 @@
 using JobFinder.Application.Auth;
 using JobFinder.Application.JobPostings;
 using JobFinder.Application.JobScoring;
+using JobFinder.Application.JobSearch;
 using JobFinder.Application.UserProfile;
 using JobFinder.Application.UserProfile.UserSkillAreas;
 using JobFinder.Application.UserProfile.UserSkills;
@@ -18,6 +19,7 @@ namespace JobFinder.Application
             services.AddScoped<IUserSkillService, UserSkillService>();
             services.AddScoped<IUserSkillAreaService, UserSkillAreaService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IJobSearchTermsService, JobSearchTermsService>();
             return services;
         }
 

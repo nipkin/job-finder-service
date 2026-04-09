@@ -39,6 +39,18 @@ namespace JobFinder.Infrastructure.JobPostings
             return outdatedPosts.Count;
         }
 
+        public async Task<HashSet<string>> GetExistingUserUrlsAsync(Guid userId, IEnumerable<string> urls, CancellationToken ct)
+        {
+            var urlList = urls.ToList();
+
+            var existing = await db.JobPostings
+                .Where(j => j.UserProfileId == userId && urlList.Contains(j.WebpageUrl))
+                .Select(j => j.WebpageUrl)
+                .ToListAsync(ct);
+
+            return existing.ToHashSet();
+        }
+
         public async Task<HashSet<string>> GetExistingUrlsAsync(IEnumerable<string> urls, CancellationToken ct)
         {
             var urlList = urls.ToList();

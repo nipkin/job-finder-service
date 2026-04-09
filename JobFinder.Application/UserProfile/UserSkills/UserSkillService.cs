@@ -1,10 +1,12 @@
-﻿namespace JobFinder.Application.UserProfile.UserSkills
+﻿using JobFinder.Application.Common;
+
+namespace JobFinder.Application.UserProfile.UserSkills
 {
     public class UserSkillService(IUserProfileRepository repository) : IUserSkillService
     {
         public async Task<Result<UserSkillResult>> AddSkill(Guid userId, Guid areaId, string name)
         {
-            var user = await repository.GetByIdAsync(userId);
+            var user = await repository.GetProfileWithSkillAreaAsync(userId, areaId);
             if (user is null)
                 return Error.NotFound($"User '{userId}' not found.");
 
@@ -23,7 +25,7 @@
 
         public async Task<Result<UserSkillResult>> UpdateSkill(Guid userId, Guid skillId, string name)
         {
-            var user = await repository.GetByIdAsync(userId);
+            var user = await repository.GetProfileWithSkillAreasAsync(userId);
             if (user is null)
                 return Error.NotFound($"User '{userId}' not found.");
 
@@ -42,7 +44,7 @@
 
         public async Task<Result> RemoveSkill(Guid userId, Guid skillId)
         {
-            var user = await repository.GetByIdAsync(userId);
+            var user = await repository.GetProfileWithSkillAreasAsync(userId);
             if (user is null)
                 return Error.NotFound($"User '{userId}' not found.");
 
