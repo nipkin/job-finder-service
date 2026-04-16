@@ -21,5 +21,29 @@ namespace JobFinder.Api.Features.UserProfile
                 return StatusCode(result.Err!.StatusCode, new { result.Err.Message });
             return Ok(result.Value);
         }
+
+        [HttpPut("cv")]
+        public async Task<IActionResult> UpdateCvText([FromBody]string cvText, CancellationToken ct)
+        {
+            if(string.IsNullOrEmpty(cvText))
+                return BadRequest();
+
+            var result = await userProfileService.UpdateUserCvAsync(UserId, cvText, ct);
+            if(!result.IsSuccess)
+                return StatusCode(result.Err!.StatusCode, new { result.Err.Message });
+
+            return Ok(result.Value);
+        }
+
+        [HttpGet("cv")]
+        public async Task<IActionResult> GetCvText(CancellationToken ct)
+        {
+
+            var result = await userProfileService.GetUserCvAsync(UserId, ct);
+            if (!result.IsSuccess)
+                return StatusCode(result.Err!.StatusCode, new { result.Err.Message });
+
+            return Ok(result.Value);
+        }
     }
 }

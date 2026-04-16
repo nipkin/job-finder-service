@@ -18,6 +18,11 @@ export interface UserProfile {
   userSkills: SkillArea[];
 }
 
+export interface UserCv {
+    id: string;
+    cvText: string;
+}
+
 async function request<T>(url: string, options?: RequestInit): Promise<T> {
   const response = await fetch(url, {
     headers: { 'Content-Type': 'application/json' },
@@ -73,12 +78,25 @@ function removeSkill(skillId: string): Promise<void> {
   return request(`${BASE_URL}/skills/${skillId}`, { method: 'DELETE' });
 }
 
+function getCvText(): Promise<UserCv> {
+    return request(`${BASE_URL}/cv`);
+}
+
+function updateCvText(cvText: string): Promise<UserCv> {
+    return request(`${BASE_URL}/cv`, {
+        method: 'PUT',
+        body: JSON.stringify(cvText)
+    });
+}
+
 export const userProfileService = {
-  getProfile,
-  createSkillArea,
-  updateSkillArea,
-  deleteSkillArea,
-  addSkill,
-  updateSkill,
-  removeSkill,
+      getProfile,
+      createSkillArea,
+      updateSkillArea,
+      deleteSkillArea,
+      addSkill,
+      updateSkill,
+      removeSkill,
+      getCvText,
+      updateCvText
 };

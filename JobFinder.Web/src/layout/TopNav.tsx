@@ -9,8 +9,9 @@ export default function TopNav() {
     <nav>
       <Link to="/">Job Finder</Link>
       <ul>
-        <li><Link to="/">Home</Link></li>
+        {!isAuthenticated && <li><Link to="/">Home</Link></li>}
         {isAuthenticated && <li><Link to="/my-page">My page</Link></li>}
+        {isAuthenticated && <li><Link to="/my-cv">My CV</Link></li>}
         {isAuthenticated && <li><Link to="/my-skill-areas">My skill areas</Link></li>}
         {isAuthenticated && <li><Link to="/run-job-match">Run search</Link></li>}
         {isAuthenticated && <li><Link to="/my-job-postings">My joblist</Link></li>}

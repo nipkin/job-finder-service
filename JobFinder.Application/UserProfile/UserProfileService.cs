@@ -22,5 +22,26 @@ namespace JobFinder.Application.UserProfile
 
             return new UserProfileResult(userProfile.Id, userProfile.UserName, skills, jobPostings);
         }
+
+        public async Task<Result<UserCvResult>> UpdateUserCvAsync(Guid id, string cvText, CancellationToken ct = default)
+        {
+            if (string.IsNullOrEmpty(cvText))
+                return Error.NotFound($"CV cannot be empty");
+
+            var userProfile = await repository.GetByIdAsync(id, ct);
+            if (userProfile is null)
+                return Error.NotFound($"User '{id}' not found.");
+
+            userProfile.CvText = cvText;
+            await repository.SaveAsync(ct);
+
+            return new UserCvResult(id, cvText);
+        }
+
+        public async Task<Result<UserCvResult>> GetUserCvAsync(Guid id, CancellationToken ct = default)
+        {
+            var cvText = await repository.GetUserCvAsync(id, ct);
+            return new UserCvResult(id, cvText ?? string.Empty);
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace JobFinder.Infrastructure.JobSearch
 
         [JsonPropertyName("positions")]
         public int Positions { get; set; }
-
+            
         [JsonPropertyName("query_time_in_millis")]
         public int QueryTimeInMillis { get; set; }
 

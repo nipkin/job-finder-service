@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 
 namespace JobFinder.Infrastructure.JobScoring
 {
-    public class JobScoringClient(HttpClient http) : IJobScoringClient
+    public class LocalJobScoringClient(HttpClient http) : IJobScoringClient
     {
         public async Task<string> GenerateAsync(string prompt, CancellationToken ct = default)
         {

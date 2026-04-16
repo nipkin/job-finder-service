@@ -50,6 +50,7 @@ export default function RunJobMatch() {
             fontFamily: 'monospace',
             fontSize: '0.85em',
             lineHeight: 1.6,
+            color: '#fff'
           }}
         >
           {messages.map((msg, i) => (

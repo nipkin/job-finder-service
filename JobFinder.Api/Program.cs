@@ -1,10 +1,8 @@
 using JobFinder.Api.Configuration;
 using JobFinder.Api.Features.Auth;
 using JobFinder.Application;
-using JobFinder.Application.JobScoring;
 using JobFinder.Infrastructure;
 using JobFinder.Infrastructure.Data;
-using JobFinder.Infrastructure.JobScoring;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -18,14 +16,8 @@ builder.Services.AddDbContext<JobFinderDbContext>(options =>
 builder.Services.Configure<JobMatchOptions>(builder.Configuration.GetSection("JobMatch"));
 builder.Services.AddControllers();
 builder.Services.AddApplicationApi();
-builder.Services.AddInfrastructure();
+builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddScoped<ITokenService, TokenService>();
-
-builder.Services.AddHttpClient<IJobScoringClient, JobScoringClient>(client =>
-{
-    client.BaseAddress = new Uri(builder.Configuration["OllamaBaseUrl"]!);
-    client.Timeout = TimeSpan.FromSeconds(120);
-});
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

@@ -47,6 +47,12 @@ namespace JobFinder.Infrastructure.UserProfile
             return userProfile?.UserSkillAreas ?? Enumerable.Empty<UserSkillArea>();
         }
 
+        public async Task<string?> GetUserCvAsync(Guid id, CancellationToken ct = default)
+        {
+            var cv = await db.UserProfiles.Where(u => u.Id == id).Select(u => u.CvText).FirstOrDefaultAsync(ct);
+            return cv;
+        }
+
         public async Task SaveAsync(CancellationToken ct = default)
         {
             await db.SaveChangesAsync(ct);
