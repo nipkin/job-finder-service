@@ -17,7 +17,7 @@ export default function MyJobPostings() {
         <p className="text-slate-500">No job postings found. Run a job match to find results.</p>
       ) : (
         <div className="flex flex-col gap-4">
-          {postings.map(p => {
+          {postings.sort((a, b) => (b.cvScore ?? 0) - (a.cvScore ?? 0)).map(p => {
             const score = p.cvScore != null ? Math.round(p.cvScore) : null;
             const scoreColor = score == null ? '' : score >= 70 ? 'text-emerald-400' : 'text-amber-400';
 
