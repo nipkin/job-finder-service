@@ -1,6 +1,5 @@
 ﻿using JobFinder.Application.Common;
 using JobFinder.Application.UserProfile.UserSkills;
-using JobFinder.Domain.Entities;
 
 namespace JobFinder.Application.UserProfile.UserSkillAreas
 {
@@ -15,15 +14,14 @@ namespace JobFinder.Application.UserProfile.UserSkillAreas
             if (user is null)
                 return Error.NotFound($"User '{userId}' not found.");
 
-            var area = new UserSkillArea { Id = Guid.NewGuid(), Name = request.Name, SkillWeight = request.SkillWeight };
+            var (area, areaError) = user.AddSkillArea(request.Name, request.SkillWeight);
+            if (areaError is not null) return Error.Validation(areaError);
 
             foreach (var skillName in request.Skills)
             {
-                var error = area.AddSkill(skillName);
+                var error = area!.AddSkill(skillName);
                 if (error is not null) return Error.Validation(error);
             }
-
-            user.UserSkillAreas.Add(area);
             await repository.SaveAsync();
 
             var skills = area.UserSkills.Select(s => new UserSkillResult(s.Id, s.Name)).ToList();
@@ -35,21 +33,16 @@ namespace JobFinder.Application.UserProfile.UserSkillAreas
             if (string.IsNullOrEmpty(command.Name))
                 return Error.Validation("Skill area name is required.");
 
-            if (command.SkillWeight < 1 || command.SkillWeight > 5)
-                return Error.Validation("Skill weight must be between 1 and 5.");
-
             var user = await repository.GetProfileWithSkillAreaAsync(userId, areaId);
             if (user is null)
                 return Error.NotFound($"User '{userId}' not found.");
 
-            var area = user.UserSkillAreas.FirstOrDefault(a => a.Id == areaId);
-            if (area is null)
-                return Error.NotFound($"Skill area '{areaId}' not found.");
+            var error = user.UpdateSkillArea(areaId, command.Name, command.SkillWeight);
+            if (error is not null) return Error.Validation(error);
 
-            area.Name = command.Name;
-            area.SkillWeight = command.SkillWeight;
             await repository.SaveAsync();
 
+            var area = user.UserSkillAreas.First(a => a.Id == areaId);
             var skills = area.UserSkills.Select(s => new UserSkillResult(s.Id, s.Name)).ToList();
             return new UserSkillAreaResult(area.Id, area.Name, skills, area.SkillWeight);
         }
@@ -60,11 +53,9 @@ namespace JobFinder.Application.UserProfile.UserSkillAreas
             if (user is null)
                 return Error.NotFound($"User '{userId}' not found.");
 
-            var area = user.UserSkillAreas.FirstOrDefault(a => a.Id == areaId);
-            if (area is null)
-                return Error.NotFound($"Skill area '{areaId}' not found.");
+            var error = user.RemoveSkillArea(areaId);
+            if (error is not null) return Error.NotFound(error);
 
-            user.UserSkillAreas.Remove(area);
             await repository.SaveAsync();
 
             return Result.Ok();
