@@ -66,26 +66,30 @@ export default function MySkillAreas() {
     }
   }
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p style={{ color: 'red' }}>{error}</p>;
+  if (loading) return <p className="text-slate-400">Loading...</p>;
+  if (error) return <p className="text-red-400">{error}</p>;
 
   return (
-    <div style={{ maxWidth: 600, margin: '0 auto', padding: '1rem' }}>
-      <h1>My Skill Areas</h1>
+    <div className="flex flex-col gap-6">
+      <div>
+        <h1 className="text-3xl font-bold text-white">My Skill Areas</h1>
+        <p className="text-slate-400 mt-1">Define skill areas and set their weight for AI matching.</p>
+      </div>
 
-      <form onSubmit={handleCreateArea} style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', alignItems: 'flex-end' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-          <label htmlFor="areaName">New skill area</label>
+      <form onSubmit={handleCreateArea} className="bg-slate-900 border border-slate-800 rounded-xl p-4 flex gap-3 items-end">
+        <div className="flex flex-col gap-1.5 flex-1">
+          <label htmlFor="areaName" className="text-sm text-slate-400">New skill area</label>
           <input
             id="areaName"
             type="text"
             placeholder="e.g. Backend"
             value={newAreaName}
             onChange={e => setNewAreaName(e.target.value)}
+            className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <label htmlFor="areaWeight">Weight (1–5)</label>
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="areaWeight" className="text-sm text-slate-400">Weight (1–5)</label>
           <input
             id="areaWeight"
             type="number"
@@ -93,99 +97,121 @@ export default function MySkillAreas() {
             max={5}
             value={newAreaWeight}
             onChange={e => setNewAreaWeight(Number(e.target.value))}
-            style={{ width: 60 }}
+            className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white w-20 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
         </div>
-        <button type="submit">Add</button>
+        <button
+          type="submit"
+          className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+        >
+          Add
+        </button>
       </form>
 
-      {formError && <p style={{ color: 'red' }}>{formError}</p>}
-      {skillAreas.length === 0 && <p>No skill areas yet.</p>}
+      {formError && <p className="text-red-400 text-sm">{formError}</p>}
+      {skillAreas.length === 0 && <p className="text-slate-500">No skill areas yet.</p>}
 
-      {skillAreas.map(area => (
-        <div key={area.id} style={{ border: '1px solid #444', borderRadius: 8, padding: '1rem', marginBottom: '1rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-            {editingArea?.areaId === area.id ? (
-              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flex: 1 }}>
-                <input
-                  autoFocus
-                  value={editingArea.name}
-                  onChange={e => setEditingArea({ ...editingArea, name: e.target.value })}
-                  onKeyDown={e => { if (e.key === 'Escape') setEditingArea(null); }}
-                  style={{ flex: 1 }}
-                />
-                <input
-                  type="number"
-                  min={1}
-                  max={5}
-                  value={editingArea.skillWeight}
-                  onChange={e => setEditingArea({ ...editingArea, skillWeight: Number(e.target.value) })}
-                  style={{ width: 60 }}
-                />
-                <button onClick={handleUpdateArea}>Save</button>
-                <button onClick={() => setEditingArea(null)}>Cancel</button>
-              </div>
-            ) : (
-              <>
-                <span
-                  style={{ fontWeight: 600, cursor: 'pointer' }}
-                  onClick={() => setEditingArea({ areaId: area.id, name: area.name, skillWeight: area.skillWeight })}
-                  title="Click to edit"
-                >
-                  {area.name} <span style={{ fontSize: '0.85em', opacity: 0.6 }}>weight {area.skillWeight}</span>
-                </span>
-                <button onClick={() => deleteArea(area.id)} style={{ color: 'red' }}>Delete area</button>
-              </>
-            )}
+      <div className="flex flex-col gap-4">
+        {skillAreas.map(area => (
+          <div key={area.id} className="bg-slate-900 border border-slate-800 rounded-xl p-5 flex flex-col gap-4">
+            <div className="flex justify-between items-center">
+              {editingArea?.areaId === area.id ? (
+                <div className="flex gap-2 items-center flex-1">
+                  <input
+                    autoFocus
+                    value={editingArea.name}
+                    onChange={e => setEditingArea({ ...editingArea, name: e.target.value })}
+                    onKeyDown={e => { if (e.key === 'Escape') setEditingArea(null); }}
+                    className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-white flex-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                  <input
+                    type="number"
+                    min={1}
+                    max={5}
+                    value={editingArea.skillWeight}
+                    onChange={e => setEditingArea({ ...editingArea, skillWeight: Number(e.target.value) })}
+                    className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-white w-16 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                  <button onClick={handleUpdateArea} className="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg text-sm transition-colors">Save</button>
+                  <button onClick={() => setEditingArea(null)} className="text-slate-400 hover:text-white px-3 py-1.5 rounded-lg text-sm transition-colors">Cancel</button>
+                </div>
+              ) : (
+                <>
+                  <button
+                    onClick={() => setEditingArea({ areaId: area.id, name: area.name, skillWeight: area.skillWeight })}
+                    className="text-white font-semibold hover:text-indigo-400 transition-colors text-left bg-transparent border-0 p-0 cursor-pointer"
+                  >
+                    {area.name}
+                    <span className="text-slate-500 font-normal text-sm ml-2">weight {area.skillWeight}</span>
+                  </button>
+                  <button
+                    onClick={() => deleteArea(area.id)}
+                    className="text-slate-500 hover:text-red-400 text-sm transition-colors"
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
+            </div>
+
+            <ul className="flex flex-col gap-2">
+              {area.skills.map(skill => (
+                <li key={skill.id} className="flex items-center gap-2">
+                  {editingSkill?.skillId === skill.id ? (
+                    <>
+                      <input
+                        autoFocus
+                        value={editingSkill.value}
+                        onChange={e => setEditingSkill({ ...editingSkill, value: e.target.value })}
+                        onKeyDown={e => {
+                          if (e.key === 'Enter') handleUpdateSkill();
+                          if (e.key === 'Escape') setEditingSkill(null);
+                        }}
+                        className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-white flex-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      />
+                      <button onClick={handleUpdateSkill} className="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1.5 rounded-lg text-sm transition-colors">Save</button>
+                      <button onClick={() => setEditingSkill(null)} className="text-slate-400 hover:text-white text-sm transition-colors">Cancel</button>
+                    </>
+                  ) : (
+                    <>
+                      <span
+                        onClick={() => setEditingSkill({ areaId: area.id, skillId: skill.id, value: skill.name })}
+                        className="flex-1 text-slate-300 text-sm cursor-pointer hover:text-white transition-colors"
+                        title="Click to edit"
+                      >
+                        {skill.name}
+                      </span>
+                      <button
+                        onClick={() => removeSkill(area.id, skill.id)}
+                        className="text-slate-600 hover:text-red-400 text-xs transition-colors"
+                      >
+                        ✕
+                      </button>
+                    </>
+                  )}
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="Add skill..."
+                value={newSkillInputs[area.id] ?? ''}
+                onChange={e => setNewSkillInputs(prev => ({ ...prev, [area.id]: e.target.value }))}
+                onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleAddSkill(area.id); } }}
+                className="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-3 py-1.5 text-white text-sm placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <button
+                onClick={() => handleAddSkill(area.id)}
+                className="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-sm transition-colors"
+              >
+                Add
+              </button>
+            </div>
           </div>
-
-          <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 0.75rem 0' }}>
-            {area.skills.map(skill => (
-              <li key={skill.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
-                {editingSkill?.skillId === skill.id ? (
-                  <>
-                    <input
-                      autoFocus
-                      value={editingSkill.value}
-                      onChange={e => setEditingSkill({ ...editingSkill, value: e.target.value })}
-                      onKeyDown={e => {
-                        if (e.key === 'Enter') handleUpdateSkill();
-                        if (e.key === 'Escape') setEditingSkill(null);
-                      }}
-                      style={{ flex: 1 }}
-                    />
-                    <button onClick={handleUpdateSkill}>Save</button>
-                    <button onClick={() => setEditingSkill(null)}>Cancel</button>
-                  </>
-                ) : (
-                  <>
-                    <span
-                      style={{ flex: 1, cursor: 'pointer' }}
-                      onClick={() => setEditingSkill({ areaId: area.id, skillId: skill.id, value: skill.name })}
-                      title="Click to edit"
-                    >
-                      {skill.name}
-                    </span>
-                    <button onClick={() => removeSkill(area.id, skill.id)} style={{ color: 'red' }}>✕</button>
-                  </>
-                )}
-              </li>
-            ))}
-          </ul>
-
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <input
-              type="text"
-              placeholder="Add skill..."
-              value={newSkillInputs[area.id] ?? ''}
-              onChange={e => setNewSkillInputs(prev => ({ ...prev, [area.id]: e.target.value }))}
-              onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleAddSkill(area.id); } }}
-              style={{ flex: 1 }}
-            />
-            <button onClick={() => handleAddSkill(area.id)}>Add</button>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
